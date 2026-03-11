@@ -44,3 +44,38 @@
   background-color: #fff;
 }
 
+.action-card {
+  background-color: #beff28; /* "Electric Lime" neon color */
+}
+
+.status-card {
+  background-color: #ff90e8;
+}
+
+
+
+
+.btn-primary {
+  background-color: white;
+  width: 100%;
+}
+
+.job-index {
+  background-color: black;
+  color: #beff28; /* Electric Lime text on black */
+  padding: 2px 6px;
+  font-weight: 900;
+  margin-right: 10px;
+  border: 2px solid black;
+}
+
+.job-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 2px solid black;
+}
+
+.job-item:last-child {
+  border-bottom: none;
+}
