@@ -4,6 +4,6 @@ export type User = {
     username: string;
     bio: string;
     skills: string[];
-    raving_avg: number;
+    rating_avg: number;
     completed_jobs: number;
 }

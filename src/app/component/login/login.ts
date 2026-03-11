@@ -3,6 +3,7 @@ import { AuthService, LoginDto } from '../../core/services/auth.service';
 import { AuthStore } from '../../core/auth/auth.store';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-
 export class Login {
+    route       = inject(ActivatedRoute);
+    router      = inject(Router);
+
     auth        = inject(AuthService);
     authstore   = inject(AuthStore);
     email       = signal<string | null>(null);
@@ -34,15 +37,21 @@ export class Login {
         }
 
         this.auth.Login(dto).subscribe({
-    next: (res) => {
-      console.log('Component received:', res);
-      // You could navigate here: this.router.navigate(['/dashboard']);
-    },
-    error: (err) => {
-      // This is where your signal gets the error message for the HTML
-      this.errApi.set(err.message);
-    }
-  });
+            next: () => {
+                const destination = this.route
+                                        .snapshot
+                                        .queryParamMap.get('returnUrl');
+                if(destination) {
+                    this.router.navigateByUrl(destination);
+                }
+                else {
+                    this.router.navigate(['']);
+                }
+            },
+            error: (err) => {
+                this.errApi.set(err.message);
+            }
+        });
     }
 
     sanitizeEmail(email: string) {
