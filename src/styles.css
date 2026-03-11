@@ -1,5 +1,64 @@
 html, body {
   margin: 0;
   padding:0;
+}
 
+h2 {
+  margin-top: 0;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: 2px solid black;
+}
+button {
+  padding: 0.8rem 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid black;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px 0px black;
+  transition: all 0.1s ease;
+}
+
+button:active {
+  box-shadow: 0px 0px 0px 0px black;
+  transform: translate(4px, 4px);
+}
+
+button:not(:disabled) {
+  color: white;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-red {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.btn-blue {
+  background-color: #93c5fd;
+  color: white;
+}
+.btn-green {
+  background-color: #a3e635;
+  color: white;
 }
