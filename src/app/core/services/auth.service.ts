@@ -1,13 +1,27 @@
-import { inject, Injectable } from '@angular/core';
-import { catchError, of, tap, throwError } from 'rxjs';
-import { ApiClient } from '../http/api-client';
-import { RegisterDto } from '../models/dto/register.dto';
-import { ApiError } from '../http/api-error.model';
-import { LoginDto } from '../models/dto/login.dto';
-import { AuthStore } from '../auth/auth.store';
-import { LoginResponseDto } from '../models/dto/login-response.dto';
+import { inject, Injectable }           from '@angular/core';
+import { catchError, Observable, tap, throwError }  from 'rxjs';
+import { ApiClient }                    from '../http/api-client';
+import { ApiError }                     from '../http/api-error.model';
+import { AuthStore }                    from '../auth/auth.store';
+import { User }                         from "../models/user.model";
+import { RegisterResponseDto } from '../models/dto/register-response.dto';
 
 
+/**
+  * list des containers utilises
+  */
+export type RegisterDto = {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+    bio: string;
+    skills: string[];
+};
+export type LoginDto = {
+    email: string;
+    password: string;
+};
 
 
 
@@ -27,13 +41,16 @@ export class AuthService {
     }
 
 
-    Login(dto: LoginDto) {
-        return this.#http.post('/auth/register', dto)
+    Login(dto: LoginDto): Observable<RegisterResponseDto> {
+        return this.#http.post('/auth/login', dto)
             .pipe(
                 tap({
                   next:(response: any) => {
-                    let r: LoginResponseDto = JSON.parse(response);
-                    this.#store.CreateSession(r.token, r.user)
+                    let token = response.token;
+                    let user  = response.user;
+                    this.#store.CreateSession(token, user);
+
+                    console.log("token has been created")
                   }
                 }),
                 catchError((err: ApiError)=> {
@@ -41,13 +58,30 @@ export class AuthService {
                     return throwError(()=> err);
                 })
             );
-    }
+    };
+
     Logout() {
       if(this.#store.isAuthenticated()) {
           this.#store.ClearSession()
       }
     }
+
+    Authenticated(){
+        return this.#store.isAuthenticated()
+    }
 }
+
+
+/** list des reponses
+  *
+  *
+  */
+export type LoginResponseDto = {
+    token: string;
+    user: User;
+};
+
+
 
 /*
   Erreurs possibles :
