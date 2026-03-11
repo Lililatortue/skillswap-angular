@@ -13,8 +13,8 @@ export class Dashboard {
   router      = inject(Router);
 
   //user related
-  self(){
-      this.router.navigate(['/self']);
+  aboutme(){
+      this.router.navigate(['/aboutme']);
   }
   //job service
 
