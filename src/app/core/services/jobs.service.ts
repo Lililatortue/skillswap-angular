@@ -1,39 +1,60 @@
-
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { JobSearchDto } from "../models/dto/job-search.dto";
 import { Job } from "../models/job.model";
 import { catchError, Observable, throwError } from "rxjs";
 import { ApiError } from "../http/api-error.model";
-import { JobCreateDto } from "../models/dto/job-create.dto";
 import { AuthStore } from "../auth/auth.store";
-import { JobUpdateDto } from "../models/dto/job-update.dto";
 import { ApiClient } from "../http/api-client";
 
 
 
 
 
+//list de container necessaire
+type JobCreateDto = {
+  title: string;
+  description: string;
+  budget: number;
+  category:string;
+
+}
+
+type JobUpdateDto = {
+  title?: string;
+  description?: string;
+  budget?:number;
+  category?:string;
+  status?:string;
+}
+
+type JobSearchDto = {
+  category?  : string;
+  status?    : string;
+  min_budget?: number;
+}
 
 
-@Injectable({
-    providedIn: 'root'
-}) class JobService {
+@Injectable({providedIn: 'root'})
+export class JobService {
     private readonly http: ApiClient = inject(ApiClient);
     private readonly authStore: AuthStore = inject(AuthStore);
 
-    search(category: string|null = null, status: string|null = null, min_budget: number|null = null): Observable<Job[]> {
+    search(
+      category    : string | null = null,
+      status      : string | null = null,
+      min_budget  : number | null = null
+    ): Observable<Job[]> {
+
         const body: JobSearchDto = {
-            category: category || undefined,
-            status: status || undefined,
+            category: category     || undefined,
+            status:   status       || undefined,
             min_budget: min_budget || undefined
         };
+
+
         return this.http.post<Job[]>('/jobs/search', body)
         .pipe(
             catchError((err: ApiError) => {
-                // Handle error, e.g., log it or show a notification
                 console.error('Failed to search jobs', err);
-                // Return a fallback value or rethrow the error`
                 return throwError(() => err);
             })
         );
@@ -103,6 +124,24 @@ import { ApiClient } from "../http/api-client";
     }
 
 
+    getMyJobs(): Observable<Job[]> {
+        if(!this.authStore.isAuthenticated()) {
+            const error: ApiError = {
+                status: 401,
+                message: "User is not authenticated"
+            };
+            console.error('User is not authenticated', error);
+            return throwError(() => error);
+        }
+
+        return this.http.get<Job[]>(`/jobs/my-postings`)
+            .pipe(
+                catchError((err: ApiError) => {
+                    console.error(`Err sent: ${err}`)
+                    return throwError(() => err);
+                })
+            );
+    }
 }
 
 export type MinBudgetError = ApiError & {
