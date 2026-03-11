@@ -32,10 +32,10 @@
 
 
           <fieldset class="box third" >
-          <legend class="logo">My Work</legend>
-              @for (work of works; track $index) {
+          <legend class="logo">My bids</legend>
+              @for (bid of bids(); track $index) {
                   <div class="job-item">
-                    <strong>{{ job.title }}{{ job.status }}</strong>
+                    <strong></strong>
                   </div>
               }
               @empty {
