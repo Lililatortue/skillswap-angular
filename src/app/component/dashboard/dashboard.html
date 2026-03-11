@@ -13,15 +13,35 @@
 </nav>
 <main>
       <!-- protect data -->
-      @if(authservice.Authenticated()){
+      @if(authservice.Authenticated()) {
           <!-- un container etat ces jobs -->
-          <div>
+          <fieldset class="box third" >
+              <legend class="logo">My Jobs</legend>
+              @for (job of jobs(); track $index) {
+                  <div class="job-item">
+                    <strong>{{ job.title }}{{ job.status }}</strong>
+                  </div>
+              }
+              @empty {
+                  <p>no jobs yet post sum </p>
+              }
 
-          </div>
-          <!-- un container list de ces contrats -->
-          <div>
+          </fieldset>
 
-          </div>
+
+
+
+          <fieldset class="box third" >
+          <legend class="logo">My Work</legend>
+              @for (work of works; track $index) {
+                  <div class="job-item">
+                    <strong>{{ job.title }}{{ job.status }}</strong>
+                  </div>
+              }
+              @empty {
+                  <p>no jobs yet post sum </p>
+              }
+          </fieldset>
       }
 
 </main>
