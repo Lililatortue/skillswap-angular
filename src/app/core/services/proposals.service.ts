@@ -27,7 +27,7 @@ export class ProposalService {
             text : text,
         }
 
-        this.#http.post<Proposal>(`/jobs/${job_id}/proposals`,dto)
+        return this.#http.post<Proposal>(`/jobs/${job_id}/proposals`,dto)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
@@ -36,8 +36,8 @@ export class ProposalService {
         );
     }
 
-    proposals(job_id: number){
-        this.#http.get<Proposal[]>(`/jobs/${job_id}/proposals`)
+    proposals(job_id: number): Observable<Proposal[]>{
+        return this.#http.get<Proposal[]>(`/jobs/${job_id}/proposals`)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
@@ -46,7 +46,7 @@ export class ProposalService {
         );
     }
     accept(proposals_id: number){
-        this.#http.patch<Proposal>(`/proposals/${proposals_id}/accept`,null)
+        return this.#http.patch<Proposal>(`/proposals/${proposals_id}/accept`,null)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
@@ -55,8 +55,8 @@ export class ProposalService {
         );
     }
 
-    mybids(){
-        this.#http.get<Proposal[]>(`proposals/my-bids`)
+    mybids(): Observable<Proposal[]>{
+        return this.#http.get<Proposal[]>(`proposals/my-bids`)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
@@ -66,7 +66,7 @@ export class ProposalService {
     }
 
     delete_proposal(proposals_id: number) {
-        this.#http.delete(`proposals/${proposals_id}`)
+        return this.#http.delete<Proposal>(`proposals/${proposals_id}`)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
