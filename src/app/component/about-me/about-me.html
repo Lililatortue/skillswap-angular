@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="profile-card">
+    <div class="header-row">
+      <h1>{{ user()?.username }}</h1>
+      <span class="id-badge">ID: {{ user()?.id }}</span>
+    </div>
+
+    <div class="bio-section">
+      <label class="section-label">Bio</label>
+      <p>{{ user()?.bio || 'No bio written yet...' }}</p>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-box green">
+        <span class="stat-value">{{ user()?.rating_avg || '0.0' }}</span>
+        <span class="stat-label">Rating</span>
+      </div>
+      <div class="stat-box blue">
+        <span class="stat-value">{{ user()?.completed_jobs || 0 }}</span>
+        <span class="stat-label">Jobs Done</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+       <label class="section-label">Skills</label>
+       <div class="skills-list">
+         @for (skill of user()?.skills; track skill) {
+           <span class="skill-tag">{{ skill }}</span>
+         }
+       </div>
+    </div>
+
+    <button class="btn-return" (click)="leave()">Back to Dashboard</button>
+  </div>
+</div>
