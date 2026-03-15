@@ -1,14 +1,8 @@
 import { inject} from '@angular/core'
 import {Router, CanActivateFn } from '@angular/router'
-import { AuthStore } from './auth.store'
+import { AuthStore } from './store'
 
 
-/*{
-  path: 'school',
-  component: SchoolComponent,
-  canActivate: [authGuard],
-  data: { claims: ['admin', 'teacher'] }
-}*/
 export const authGuard: CanActivateFn = (route, state)=> {
 
   const router= inject(Router);

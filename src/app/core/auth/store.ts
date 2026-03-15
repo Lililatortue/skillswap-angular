@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core'
-import { User } from '../models/user.model'
+import { User } from '../user/model'
 
 
 @Injectable({providedIn: 'root'})
@@ -10,12 +10,10 @@ export class AuthStore {
 
   readonly token = signal<string | null>(localStorage.getItem(this.TOKEN_KEY));
   readonly isAuthenticated = computed(() => !!this.token());
-  readonly user = signal<User | null>(this.ParseUser());
+  readonly user = signal<User | null>(this.parseUser());
 
 
-  CreateSession(token: string, user: User){
-    console.log("what the helly");
-
+  createSession(token: string, user: User){
 
     localStorage.setItem(this.TOKEN_KEY,token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user))
@@ -23,7 +21,7 @@ export class AuthStore {
     this.user.set(user);
   }
 
-  ClearSession() {
+  clearSession() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.token.set(null);
@@ -31,7 +29,7 @@ export class AuthStore {
   }
 
 
-  private ParseUser(): User | null{
+  private parseUser(): User | null{
     const raw = localStorage.getItem(this.USER_KEY);
 
     return raw ? JSON.parse(raw): null;

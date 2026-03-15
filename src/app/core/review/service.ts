@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
-import { AuthStore } from "../auth/auth.store";
+import { AuthStore } from "../auth/store";
 import { ApiError } from "../http/api-error.model";
-import { catchError, Observable, of, throwError } from "rxjs";
+import { catchError, Observable, of, tap, throwError } from "rxjs";
 import { ApiClient } from "../http/api-client";
 
 
@@ -14,24 +14,22 @@ import { ApiClient } from "../http/api-client";
 type CreateReviewDto = {
     target_id: string;
     rating   : number;
-    message? : string;
-
 }
-
 /**
   * le service
   *
   *
   */
 @Injectable({providedIn: 'root'})
-export class Review {
+export class ReviewService {
     readonly #store: AuthStore = inject(AuthStore);
     readonly #http : ApiClient = inject(ApiClient);
 
 
-    getReview(id: number): Observable<Review> {
-        return this.#http.get<Review>(`reviews/user/${id}`)
+    getReview(id: number): Observable<any> {
+        return this.#http.get<any>(`reviews/user/${id}`)
           .pipe(
+              tap((detail)=> {console.log(detail)}),
               catchError((err: ApiError) => {
 
                   console.error("Error sent: " + err);
@@ -40,11 +38,18 @@ export class Review {
           );
     };
 
-    createReview(job_id: string, dto: CreateReviewDto) {
-        if(!this.#store.isAuthenticated()){
-            return of(null);
+    createReview(
+      job_id: string,
+      target_id: string,
+      rating: 1|2|3|4|5
+    )
+    {
+        const review = {
+          target_id: target_id,
+          rating   : rating
         };
-        return this.#http.post(`/jobs/${job_id}/reviews/`,dto)
+
+        return this.#http.post(`/jobs/${job_id}/reviews`,review)
             .pipe(
                 catchError((err: ApiError)=> {
                     console.error("Error sent: " + err);
