@@ -1,22 +1,18 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { AuthService, LoginDto } from '../../core/services/auth.service';
-import { AuthStore } from '../../core/auth/auth.store';
+import { AuthService, LoginDto } from '../../core/auth/service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
-    route       = inject(ActivatedRoute);
     router      = inject(Router);
-
     auth        = inject(AuthService);
-    authstore   = inject(AuthStore);
+
     email       = signal<string | null>(null);
     errEmail    = signal<string | null>(null);
     password    = signal<string | null>(null);
@@ -36,17 +32,9 @@ export class Login {
 
         }
 
-        this.auth.Login(dto).subscribe({
+        this.auth.login(dto).subscribe({
             next: () => {
-                const destination = this.route
-                                        .snapshot
-                                        .queryParamMap.get('returnUrl');
-                if(destination) {
-                    this.router.navigateByUrl(destination);
-                }
-                else {
-                    this.router.navigate(['']);
-                }
+                this.router.navigate(['/dashboard']);
             },
             error: (err) => {
                 this.errApi.set(err.message);

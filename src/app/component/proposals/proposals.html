@@ -1,0 +1,44 @@
+
+<div class="container">
+    <form class="superbig form-box">
+      <h1 class="logo">Proposals</h1>
+      @if (errProposals()) {
+          <div class="error-banner">
+              {{ errProposals() }}
+          </div>
+      }
+      <div class="nith">
+            @for (bid of allProposals(); track $index) {
+                  <div class="job-item">
+                      <div class="job-info">
+                          <div>
+                            <span class="status-tag">{{bid.job_id}}</span>
+                            <span class="status-tag">{{bid.price}}</span>
+
+                          </div>
+                              <label>Description: </label>
+                              @if ('cover_letter' in bid) {
+                                  <span class="status-tag">{{ bid.cover_letter }}</span>
+                              }
+                              @else {
+                                  <span class="status-tag">{{ bid.message }}</span>
+                              }
+                      </div>
+
+                      <div class="job-actions">
+                        <button class="btn-green" type="button" (click)="accept(bid.id)">accept offer</button>
+                      </div>
+                  </div>
+              }
+              @empty {
+                  <p>no proposals</p>
+              }
+        </div>
+        <div class="oneth right">
+            <button type="button" routerLink="../../">back</button>
+        </div>
+    </form>
+</div>
+
+
+

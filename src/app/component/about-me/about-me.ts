@@ -1,18 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
-import { User } from '../../core/models/user.model';
-import { UsersService } from '../../core/services/users.service';
-import { Router } from '@angular/router';
+import { Component, inject, signal }  from '@angular/core';
+import { User }                       from '../../core/user/model';
+import { AuthService } from '../../core/auth/service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-about-me',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './about-me.html',
   styleUrl: './about-me.css',
 })
 export class AboutMe {
-    router        = inject(Router);
-    userservice   = inject(UsersService);
-    readonly user = signal<User | null>(null);
+    user_service   = inject(AuthService);
+    readonly user  = signal<User | null>(null);
     readonly err_message = signal<string | null>(null);
 
     ngOnInit(): void {
@@ -20,17 +19,7 @@ export class AboutMe {
     }
 
     init() {
-        this.userservice.getMyProfile().subscribe({
-            next: (res) => {
-                this.user.set(res);
-            },
-            error:(err) => {
-                this.err_message.set(err);
-            },
-        })
+       this.user.set(this.user_service.whoami()!)
     }
 
-    leave() {
-        this.router.navigate([""])
-    }
 }

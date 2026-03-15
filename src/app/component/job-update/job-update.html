@@ -1,0 +1,46 @@
+<div class="container">
+<form class="big form-card" (submit)="$event.preventDefault(); update_job()">
+  <h1>Update Job</h1>
+
+  <div class="form-group">
+    <label>Title</label>
+    <input
+      type="text"
+      [value]="title()"
+      (input)="title.set($any($event.target).value)"
+      placeholder="Fix my Roof pls">
+  </div>
+
+  <div class="form-group">
+    <label>Budget</label>
+    <input
+      type="number"
+      [value]="budget()"
+      (input)="budget.set(+$any($event.target).value)"
+      placeholder="100.0">
+  </div>
+
+  <div class="form-group">
+    <label>Category</label>
+    <input
+      type="text"
+      [value]="category()"
+      (input)="category.set($any($event.target).value)"
+      placeholder="construction">
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea
+      [value]="description()"
+      (input)="description.set($any($event.target).value)"
+      rows="4"></textarea>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-red" [routerLink]="['../../']">Back</button>
+    <button type="submit" class="btn-green">Register</button>
+
+  </div>
+</form>
+</div>

@@ -1,0 +1,47 @@
+<div class="container">
+    <form class="superbig form-box">
+        <div class="form-actions">
+            <h1 class="logo">Available Jobs</h1>
+            <button class="btn-blue" routerLink="filter">modify filter</button>
+        </div>
+        <div class="nith">
+            @for (job of availableJobs(); track $index) {
+                  <div class="job-item">
+                      <div class="job-info">
+                          <h2 class="sublogo">{{ job.title }}</h2>
+                          <span class="status-tag">{{ job.id }}</span>
+
+                          <div>
+                              <span class="status-tag">{{ job.category }}</span>
+                              <span class="status-tag">{{ job.status }}</span>
+                          </div>
+                              <label>Description: </label>
+                              <span class="status-tag">{{ job.description }}</span>
+                      </div>
+
+                      <div class="job-actions">
+                          <button
+                            class="btn-blue" type="button" [routerLink]="['showuser',job.id]">
+                              check user
+                          </button>
+                          <button
+                            class="btn-green"type="button" [routerLink]="['postproposal', job.id]">
+                              send proposal
+                          </button>
+                      </div>
+                  </div>
+              }
+              @empty {
+                  <p>no jobs available</p>
+              }
+        </div>
+        <div class="oneth right">
+            <button class="btn-red"routerLink="../">back to dashboard</button>
+        </div>
+    </form>
+</div>
+
+<router-outlet></router-outlet>
+
+
+

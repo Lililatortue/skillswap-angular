@@ -1,0 +1,32 @@
+<div class="container">
+
+  <div class="box">
+    <h2 class="logo">Leave a Review</h2>
+
+    @if (errMessage()) {
+        <p class="error-text">{{ errMessage() }}</p>
+    }
+
+    <div class="form-group">
+        <label>Rating (1-5):</label>
+        <div class="rating-options">
+            @for (num of [1,2,3,4,5]; track num) {
+                <button
+                    type="button"
+                    [class.active]="rating() === num"
+                    (click)="setRating(num)">{{ num }}
+                </button>
+            }
+        </div>
+    </div>
+
+    <button class="btn-green" (click)="create()" [disabled]="!id()">
+        Submit Review
+    </button>
+     <button class="btn-red" [routerLink]="['../../../']">
+        back
+    </button>
+
+
+  </div>
+</div>

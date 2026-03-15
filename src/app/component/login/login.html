@@ -1,6 +1,5 @@
-<html>
 <body class="container">
-  <form class="login-card" (submit)="$event.preventDefault(); Login()">
+  <form class="form-card small" (submit)="$event.preventDefault(); Login()">
     <h1>Login into your Account</h1>
 
     <div class="form-group">
@@ -10,7 +9,7 @@
         placeholder="john@example.com"
         (input)="sanitizeEmail(emailInput.value)"
         #emailInput>
-      @if (errEmail()) { <small class="error">{{ errEmail() }}</small> }
+        @if (errEmail()) { <small class="error">{{ errEmail() }}</small> }
     </div>
 
     <div class="form-group">
@@ -20,16 +19,16 @@
         placeholder="********"
         (input)="sanitizePassword(passInput.value)"
         #passInput>
-      @if (errPassword()) { <small class="error">{{ errPassword() }}</small> }
+        @if (errPassword()) { <small class="error">{{ errPassword() }}</small> }
     </div>
-
     @if (errApi()) {
       <div class="api-error">{{ errApi() }}</div>
     }
 
+    <a routerLink = "/register" [replaceUrl]="true">I don't have an account</a>
+
     <button type="submit" [disabled]="!guard()">
-      Register
+      login
     </button>
   </form>
 </body>
-</html>
