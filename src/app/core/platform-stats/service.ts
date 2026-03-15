@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
-import { platform_stats } from '../models/platform-stats.model';
-import { ApiClient } from '../http/api-client';
+import { platform_stats }     from './model';
+import { ApiClient }          from '../http/api-client';
 
 
 

@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, effect, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from './core/auth/service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,19 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('skillswap');
+  private auth   = inject(AuthService);
+  private router = inject(Router);
+
+  constructor() {
+      effect(() => {
+          const user = this.auth.store.isAuthenticated();
+
+          if (!user) {
+            this.router.navigate(['/login']);
+          }
+          else {
+            this.router.navigate(['/dashboard']);
+          }
+      });
+  }
 }

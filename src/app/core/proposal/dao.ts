@@ -1,10 +1,8 @@
 import { inject, Injectable } from "@angular/core";
-import { Job } from "../models/job.model";
-import { catchError, Observable, throwError } from "rxjs";
+import { catchError, Observable, tap, throwError } from "rxjs";
 import { ApiError } from "../http/api-error.model";
-import { AuthStore } from "../auth/auth.store";
 import { ApiClient } from "../http/api-client";
-import { Proposal } from "../models/proposal.model";
+import { Proposal } from "./model";
 
 
 
@@ -12,22 +10,22 @@ import { Proposal } from "../models/proposal.model";
 
 type ProposalDto = {
   price:number;
-  text: string;
+  message: string;
 }
 
 
 //list de container necessaire
 @Injectable({providedIn: 'root'})
-export class ProposalService {
+export class ProposalDao {
     readonly #http: ApiClient = inject(ApiClient);
 
-    create_proposal(job_id:number, price:number, text: string){
+    createProposal(job_id:string, price:number, text: string){
         const dto: ProposalDto = {
             price: price,
-            text : text,
+            message : text,
         }
 
-        return this.#http.post<Proposal>(`/jobs/${job_id}/proposals`,dto)
+        return this.#http.post<any>(`/jobs/${job_id}/proposals`,dto)
             .pipe(
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
@@ -36,16 +34,28 @@ export class ProposalService {
         );
     }
 
-    proposals(job_id: number): Observable<Proposal[]>{
+    fetch_proposal(job_id: string): Observable<Proposal[]>{
         return this.#http.get<Proposal[]>(`/jobs/${job_id}/proposals`)
             .pipe(
+                tap((err)=>{console.log("check data:"+err)}),
                 catchError((err: ApiError)=>{
                 console.error("Error sent: "+err);
                 return throwError(()=>err)
             })
         );
     }
-    accept(proposals_id: number){
+
+    delete_proposal(proposals_id: number) {
+        return this.#http.delete<Proposal>(`/proposals/${proposals_id}`)
+            .pipe(
+                catchError((err: ApiError)=>{
+                console.error("Error sent: "+err);
+                return throwError(()=>err)
+              })
+            )
+    }
+
+    accept(proposals_id: string){
         return this.#http.patch<Proposal>(`/proposals/${proposals_id}/accept`,null)
             .pipe(
                 catchError((err: ApiError)=>{
@@ -56,24 +66,16 @@ export class ProposalService {
     }
 
     mybids(): Observable<Proposal[]>{
-        return this.#http.get<Proposal[]>(`proposals/my-bids`)
+        return this.#http.get<any>(`/proposals/my-bids`)
             .pipe(
-                catchError((err: ApiError)=>{
-                console.error("Error sent: "+err);
+                tap((err)=>{console.log(err)}),
+                catchError((err: any)=>{
+                console.error("Error sent sdaf: "+err);
                 return throwError(()=>err)
               })
             )
     }
 
-    delete_proposal(proposals_id: number) {
-        return this.#http.delete<Proposal>(`proposals/${proposals_id}`)
-            .pipe(
-                catchError((err: ApiError)=>{
-                console.error("Error sent: "+err);
-                return throwError(()=>err)
-              })
-            )
-    }
 }
 
 export type MissingRequiredFields = ApiError & {

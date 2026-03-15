@@ -2,9 +2,8 @@ import { inject, Injectable }           from '@angular/core';
 import { catchError, Observable, tap, throwError }  from 'rxjs';
 import { ApiClient }                    from '../http/api-client';
 import { ApiError }                     from '../http/api-error.model';
-import { AuthStore }                    from '../auth/auth.store';
-import { User }                         from "../models/user.model";
-import { RegisterResponseDto } from '../models/dto/register-response.dto';
+import { AuthStore }                    from '../auth/store';
+import { User }                         from "../user/model";
 
 
 /**
@@ -27,10 +26,10 @@ export type LoginDto = {
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-    readonly #http: ApiClient = inject(ApiClient);
-    readonly #store:AuthStore = inject(AuthStore);
+    readonly #http : ApiClient = inject(ApiClient);
+    readonly store: AuthStore = inject(AuthStore);
 
-    Register(dto: RegisterDto) {
+    register(dto: RegisterDto) {
         return this.#http.post('/auth/register',dto)
             .pipe(
                 catchError((err: ApiError) => {
@@ -41,16 +40,14 @@ export class AuthService {
     }
 
 
-    Login(dto: LoginDto): Observable<RegisterResponseDto> {
+    login(dto: LoginDto): Observable<RegisterResponseDto> {
         return this.#http.post('/auth/login', dto)
             .pipe(
                 tap({
                   next:(response: any) => {
                     let token = response.token;
                     let user  = response.user;
-                    this.#store.CreateSession(token, user);
-
-                    console.log("token has been created")
+                    this.store.createSession(token, user);
                   }
                 }),
                 catchError((err: ApiError)=> {
@@ -60,14 +57,17 @@ export class AuthService {
             );
     };
 
-    Logout() {
-      if(this.#store.isAuthenticated()) {
-          this.#store.ClearSession()
+    logout() {
+      if(this.store.isAuthenticated()) {
+          this.store.clearSession()
       }
     }
 
-    Authenticated(){
-        return this.#store.isAuthenticated()
+    authenticated(){
+        return this.store.isAuthenticated()
+    }
+    whoami(){
+        return this.store.user();
     }
 }
 
@@ -81,6 +81,10 @@ export type LoginResponseDto = {
     user: User;
 };
 
+export type RegisterResponseDto = {
+    message: string;
+    user: User;
+}
 
 
 /*
