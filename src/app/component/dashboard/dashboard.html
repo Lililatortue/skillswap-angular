@@ -2,47 +2,118 @@
 <nav class="top-nav">
     <span class="logo">SKILLSWAP</span>
     <div class="user-info">
-      @if(authservice.Authenticated()){
-          <button class="btn-blue"(click)="aboutme()"  >about me</button>
-          <button class="btn-red" (click)="logout()">logout</button>
-      }
-      @else {
-          <button class="btn-red"  (click)="login()">login</button>
-      }
+        <button
+          class="btn-blue"
+          [routerLink]="['aboutme']">
+            about me
+        </button>
+        <button
+          class="btn-red"
+          (click)="logout()">
+            logout
+        </button>
     </div>
 </nav>
 <main>
-      <!-- protect data -->
-      @if(authservice.Authenticated()) {
           <!-- un container etat ces jobs -->
           <fieldset class="box third" >
               <legend class="logo">My Jobs</legend>
-              @for (job of jobs(); track $index) {
+
+              <div class="nith">
+              @for (job of myJobs(); track $index) {
                   <div class="job-item">
-                    <strong>{{ job.title }}{{ job.status }}</strong>
+                      <div class="job-info">
+                          <h2 class="sublogo">{{ job.title }}</h2>
+
+                          <div>
+                              <span class="status-tag">{{ job.category }}</span>
+                              <span class="status-tag">{{ job.status }}</span>
+                          </div>
+                              <label>Description: </label>
+                              <span class="status-tag">{{ job.description }}</span>
+                      </div>
+
+                      <div class="job-actions">
+                          @if(job.status == "open"){
+                            <button
+                                class="btn-blue"
+                                type="button"
+                                [routerLink]="['proposals',job.id]">
+                                    proposals
+                            </button>
+                          }
+                          @else if(job.status=="in_progress"){
+                            <button
+                                class="btn-blue"
+                                type="button"
+                                (click)="completed(job.id)">
+                                    done
+                            </button>
+                          }
+                          @else{
+                            <button
+                              class="btn-blue"
+                              type="button"
+                              [routerLink]="['review',job.id, job.freelancer_id]">
+                                  review
+                            </button>
+                          }
+                          <button
+                            class="btn-green"
+                            type="button"
+                            [routerLink]="['jobupdate',job.id]">
+                                update
+                          </button>
+                      </div>
                   </div>
               }
               @empty {
-                  <p>no jobs yet post sum </p>
+
               }
+              </div>
+              <div class="oneth right">
+                  <button class="btn-green sublogo" [routerLink]="['jobposting']">Add a Job</button>
+              </div>
 
           </fieldset>
-
-
-
 
           <fieldset class="box third" >
-          <legend class="logo">My bids</legend>
-              @for (bid of bids(); track $index) {
+              <legend class="logo">My bids</legend>
+              <div class="nith">
+              @for (bid of mybids(); track $index) {
                   <div class="job-item">
-                    <strong></strong>
+                      <div class="job-info">
+                          <div>
+                              <span class="status-tag">{{ bid.status }}</span>
+                          </div>
+                              <label>Description: </label>
+                              @if ('cover_letter' in bid) {
+                                  <span class="status-tag">{{ bid.cover_letter }}</span>
+                              }
+                              @else {
+                                  <span class="status-tag">{{ bid.message }}</span>
+                              }
+                      </div>
+
+
+                  <div class="job-actions">
+                    <button
+                        class="btn-blue"
+                        type="button"
+                        [routerLink]="['review', bid.job_id, '']">
+                            review
+                    </button>
                   </div>
+              </div>
               }
               @empty {
-                  <p>no jobs yet post sum </p>
-              }
-          </fieldset>
-      }
 
+              }
+              </div>
+              <div class="oneth right">
+                  <button class="btn-green sublogo"[routerLink]="['searchjob']">Search for a Job</button>
+              </div>
+
+          </fieldset>
 </main>
 

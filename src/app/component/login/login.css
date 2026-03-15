@@ -1,27 +1,4 @@
-.container {
-  position: fixed;
-  inset:    0;
-  width:    100vw   !important;
-  height:   100vh   !important;
-  z-index:  9999;
-  background-color:rgba(0, 0, 0, 0.6);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-family: sans-serif;
-  overflow-y: hidden;
-}
-
-.login-card {
-  background: white;
-  padding: 2rem;
-  border: 2px solid black;
-  box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-  width: 100%;
-  max-width: 400px;
-}
 
 h1 {
   font-size: 1.2rem;
@@ -29,11 +6,6 @@ h1 {
   text-align: center;
 }
 
-.form-group {
-  margin-bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
-}
 
 
 button {

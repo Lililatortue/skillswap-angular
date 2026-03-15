@@ -1,69 +1,64 @@
-import { Component, inject, signal } from '@angular/core';
-import { AuthService } from '../../core/services/auth.service';
-import { JobService  } from '../../core/services/jobs.service';
-import { Router, RouterOutlet } from '@angular/router';
-import { Job } from '../../core/models/job.model';
-import { Proposal } from '../../core/models/proposal.model';
-import { ProposalService } from '../../core/services/proposals.service';
+import { Component, inject, signal }    from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService }          from '../../core/auth/service';
+import { ProposalDao } from '../../core/proposal/dao';
+import { JobDao } from '../../core/job/dao';
+import { Job } from '../../core/job/model';
+import { Proposal } from '../../core/proposal/model';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
-  authservice       = inject(AuthService);
-  jobservice        = inject(JobService);
-  proposalservice   = inject(ProposalService);
-  router            = inject(Router);
-  readonly jobs     = signal<Job[]>([]);
-  readonly bids     = signal<Proposal[]>([]);
+  private authservice = inject(AuthService);
+  private router      = inject(Router);
 
-  ngOnInit() {
-    this.myjobs();
-  }
-  //user related
-  aboutme(){
-      this.router.navigate(['/aboutme']);
-  }
-  //job service
-  myjobs(){
-      this.jobservice.getMyJobs().subscribe(
-          {
-              next: (res) => {
-                 this.jobs.set(res);
-              },
-              error:(err)=> {
-                  //TODO: include errors
-              }
-          }
-      )
-  }
-  //job service
-  myproposals(){
-      this.proposalservice.mybids().subscribe(
-          {
-              next: (res) => {
-                 this.bids.set(res);
-              },
-              error:(err)=> {
-                  //TODO: include errors
-              }
-          }
-      )
-  }
-  //proposal service
-  offers(){
-      this.router.navigate(['/offers']);
-  }
 
-  //auth service
+  //gestion de service job
+  private job = inject(JobDao);
+  errMyJobs = signal('loading jobs')
+  myJobs    = signal<Job[]>([]);
+  _1 = this.job.getMyJobs()
+    .subscribe({
+        next:(res) =>{
+          this.myJobs.set(res)
+        },
+        error:(err)=>{
+            this.errMyBids.set(err);
+        }
+    });
+
+  //gestion de service proposal
+  proposal  = inject(ProposalDao);
+  errMyBids = signal('loading bids');
+  mybids    = signal<Proposal[]>([]);
+  _2 = this.proposal.mybids()
+    .subscribe({
+        next:(res) =>{
+          this.mybids.set(res)
+        },
+        error:(err)=>{
+            this.errMyBids.set(err);
+        }
+    });
+
+
+
   logout(){
-      //clear localstorage
-      this.authservice.Logout();
+      //logout
+      this.authservice.logout();
+      this.router.navigate([''])
   }
-  login(){
-      this.router.navigate(['/login']);
+  completed(job_id: string){
+    this.job.complete(job_id)
+        .subscribe({
+            error:(err) => {
+              this.errMyJobs.set(err);
+            }
+        })
   }
+
 }

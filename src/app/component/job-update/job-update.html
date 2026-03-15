@@ -1,7 +1,6 @@
-
 <div class="container">
-<form class="big form-card" (submit)="$event.preventDefault(); post_job()">
-  <h1>Post Job</h1>
+<form class="big form-card" (submit)="$event.preventDefault(); update_job()">
+  <h1>Update Job</h1>
 
   <div class="form-group">
     <label>Title</label>
@@ -39,8 +38,9 @@
   </div>
 
   <div class="form-actions">
-      <button type="button" class="btn-red" [routerLink]="['../']">Back</button>
-      <button type="submit" class="btn-green">Register</button>
+    <button type="button" class="btn-red" [routerLink]="['../../']">Back</button>
+    <button type="submit" class="btn-green">Register</button>
+
   </div>
 </form>
 </div>

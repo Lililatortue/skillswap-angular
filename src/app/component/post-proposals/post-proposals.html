@@ -1,0 +1,40 @@
+<div class="container">
+    <form class="superbig form-box">
+        <div class="form-actions">
+            <h1 class="logo">Send proposal</h1>
+        </div>
+        <div class="nith">
+            <div class="form-group">
+            <label for="budget">Your Budget ($)</label>
+            <input
+                type="number"
+                id="budget"
+                name="budget"
+                [(ngModel)]="budget"
+                placeholder="0.00"/>
+            </div>
+
+        <div class="form-group">
+            <label for="message">Description / Pitch</label>
+            <textarea
+                id="message"
+                name="message"
+                [(ngModel)]="text"
+                placeholder="Why are you a good fit"
+                rows="5"></textarea>
+        </div>
+        @if (errMessage()) {
+            <div class="error-box">
+                {{ errMessage() }}
+            </div>
+        }
+        </div>
+        <div class="oneth form-actions">
+             <button class="btn-red" type="button" routerLink="../../">back to dashboard</button>
+             <button class="btn-green" (click)="postProposal()">send proposal</button>
+        </div>
+    </form>
+</div>
+
+
+
